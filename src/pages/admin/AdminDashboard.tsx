@@ -47,11 +47,11 @@ export default function AdminDashboard() {
   ];
 
   const variantStyles: Record<string, { bg: string; iconBg: string; iconText: string }> = {
-    accent: { bg: 'bg-accent/5 border-accent/15', iconBg: 'bg-accent/10', iconText: 'text-accent' },
-    default: { bg: 'bg-base-100 border-base-200', iconBg: 'bg-base-200', iconText: 'text-base-500' },
-    success: { bg: 'bg-green-500/5 border-green-500/15', iconBg: 'bg-green-500/10', iconText: 'text-green-400' },
-    error: { bg: 'bg-red-500/5 border-red-500/15', iconBg: 'bg-red-500/10', iconText: 'text-red-400' },
-    warning: { bg: 'bg-amber-500/5 border-amber-500/15', iconBg: 'bg-amber-500/10', iconText: 'text-amber-400' },
+    accent: { bg: 'bg-gradient-to-br from-accent/10 to-accent/5 border-accent/25 hover:shadow-glow', iconBg: 'bg-gradient-to-br from-accent-light/20 to-accent/10', iconText: 'text-accent' },
+    default: { bg: 'bg-gradient-to-br from-base-100 to-base-50 border-base-200 hover:shadow-elevated', iconBg: 'bg-gradient-to-br from-base-300 to-base-200', iconText: 'text-base-500' },
+    success: { bg: 'bg-gradient-to-br from-green-500/10 to-green-500/5 border-green-500/25', iconBg: 'bg-gradient-to-br from-green-400/20 to-green-500/10', iconText: 'text-green-400' },
+    error: { bg: 'bg-gradient-to-br from-red-500/10 to-red-500/5 border-red-500/25', iconBg: 'bg-gradient-to-br from-red-400/20 to-red-500/10', iconText: 'text-red-400' },
+    warning: { bg: 'bg-gradient-to-br from-amber-500/10 to-amber-500/5 border-amber-500/25', iconBg: 'bg-gradient-to-br from-amber-400/20 to-amber-500/10', iconText: 'text-amber-400' },
   };
 
   return (

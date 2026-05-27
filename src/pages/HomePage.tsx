@@ -27,22 +27,16 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       {/* Hero */}
       <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-base-0">
         {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden bg-gradient-mesh" />
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full bg-gradient-radial from-accent/5 via-transparent to-transparent" />
-          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full bg-gradient-radial from-accent/3 via-transparent to-transparent" />
-          <div
-            className="absolute inset-0 opacity-[0.02]"
-            style={{
-              backgroundImage: `linear-gradient(rgba(var(--accent), 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent), 0.5) 1px, transparent 1px)`,
-              backgroundSize: '80px 80px',
-            }}
-          />
+          <div className="absolute top-1/4 -left-1/4 w-[1000px] h-[1000px] rounded-full bg-gradient-radial from-accent/10 via-accent/5 to-transparent blur-3xl opacity-60" />
+          <div className="absolute bottom-0 right-0 w-[800px] h-[800px] rounded-full bg-gradient-radial from-accent/5 via-transparent to-transparent blur-2xl opacity-40" />
         </div>
 
         <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 w-full">
           <div className="max-w-4xl mx-auto text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 mb-8 animate-fade-in">
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-accent/30 bg-accent/10 backdrop-blur-sm mb-8 animate-fade-in">
               <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
               <span className="text-accent text-xs font-semibold tracking-widest uppercase">
                 Plataforma B2B de Peças Automotivas
@@ -50,14 +44,14 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-base-900 leading-[1.1] tracking-tight mb-6 animate-slide-up">
+            <h1 className="text-4xl sm:text-5xl lg:text-[4rem] font-bold text-base-900 leading-[1.05] tracking-tight mb-6 animate-slide-up">
               Catálogo Técnico
               <span className="block mt-2 text-gradient">Premium</span>
             </h1>
 
             {/* Subheadline */}
             <p className="text-base-600 text-lg sm:text-xl leading-relaxed mb-12 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '100ms' }}>
-              Acesso completo a milhares de peças automotivas com especificações técnicas, referências OEM e aplicações por veículo.
+              Acesso completo a milhares de peças automotivas com especificações técnicas detalhadas, referências OEM cruzadas e aplicações por veículo.
             </p>
 
             {/* Search */}
@@ -71,7 +65,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                   onSelectSuggestion={(type, value) => onNavigate('catalog', { search: value })}
                 />
               </div>
-              <button onClick={handleSearch} className="btn-primary h-14 px-8 whitespace-nowrap">
+              <button onClick={handleSearch} className="btn-primary h-14 px-8 whitespace-nowrap hover:shadow-glow-strong transition-all duration-300">
                 <Search className="w-5 h-5" />
                 <span>Buscar</span>
               </button>
@@ -84,8 +78,8 @@ export default function HomePage({ onNavigate }: HomePageProps) {
                 { label: 'Categorias', value: categories.length },
                 { label: 'Referências OEM', value: '1.200+' },
               ].map(stat => (
-                <div key={stat.label} className="text-center">
-                  <div className="text-3xl sm:text-4xl font-bold text-base-900 mb-1">
+                <div key={stat.label} className="text-center group">
+                  <div className="text-3xl sm:text-4xl font-bold text-base-900 mb-1 group-hover:text-accent transition-colors">
                     {typeof stat.value === 'number' ? stat.value.toString().padStart(2, '0') : stat.value}
                   </div>
                   <div className="text-sm text-base-500">{stat.label}</div>

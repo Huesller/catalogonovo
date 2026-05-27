@@ -48,9 +48,9 @@ export default function Header({ currentPage, onNavigate, onSearch }: HeaderProp
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 ease-smooth ${
+        className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-500 ease-smooth ${
           scrolled
-            ? 'bg-base-0/95 backdrop-blur-xl border-b border-base-200/80 shadow-subtle'
+            ? 'bg-base-0/80 backdrop-blur-2xl border-b border-base-200/50 shadow-elevated'
             : 'bg-transparent border-b border-transparent'
         }`}
       >

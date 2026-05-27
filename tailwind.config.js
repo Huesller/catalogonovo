@@ -49,11 +49,26 @@ export default {
         card: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 16px -4px rgba(0,0,0,0.5)',
         glow: '0 0 20px -5px rgba(212,168,85,0.15)',
       },
+      boxShadow: {
+        subtle: '0 1px 2px 0 rgba(0,0,0,0.5)',
+        elevated: '0 4px 12px -2px rgba(0,0,0,0.5), 0 2px 4px -2px rgba(0,0,0,0.3)',
+        card: '0 0 0 1px rgba(255,255,255,0.03), 0 4px 16px -4px rgba(0,0,0,0.5)',
+        glow: '0 0 20px -5px rgba(212,168,85,0.15)',
+        'glow-strong': '0 0 30px rgba(212,168,83,0.25)',
+        'inner-glow': 'inset 0 1px 0 rgba(255,255,255,0.05)',
+      },
+      backgroundImage: {
+        'gradient-mesh': 'radial-gradient(at 40% 20%, rgba(212, 168, 83, 0.08) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(212, 168, 83, 0.06) 0px, transparent 50%)',
+        'shine': 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.1) 100%)',
+      },
       animation: {
         'fade-in': 'fadeIn 200ms ease-out',
         'slide-up': 'slideUp 300ms ease-out',
         'scale-in': 'scaleIn 150ms ease-out',
         shimmer: 'shimmer 2s linear infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-subtle': 'pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'spin-slow': 'spin 3s linear infinite',
       },
       keyframes: {
         fadeIn: {
@@ -71,6 +86,14 @@ export default {
         shimmer: {
           '0%': { backgroundPosition: '-200% 0' },
           '100%': { backgroundPosition: '200% 0' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        'pulse-subtle': {
+          '0%, 100%': { opacity: '1' },
+          '50%': { opacity: '0.8' },
         },
       },
       transitionTimingFunction: {
