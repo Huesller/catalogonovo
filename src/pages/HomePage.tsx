@@ -42,21 +42,21 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         {/* Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
-        <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-24 w-full">
+        <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
           <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 border border-amber-500/30 bg-amber-500/10 rounded-full px-4 py-1.5 mb-8">
+            <div className="inline-flex items-center gap-2 border border-amber-500/30 bg-amber-500/10 rounded-full px-4 py-1.5 mb-6">
               <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
               <span className="text-amber-400 text-xs font-semibold tracking-widest uppercase">
                 Plataforma B2B de Peças Automotivas
               </span>
             </div>
 
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-[1.05] tracking-tight mb-6">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-5">
               Catálogo Técnico
               <span className="block text-amber-500">Premium</span>
             </h1>
 
-            <p className="text-gray-400 text-lg sm:text-xl leading-relaxed mb-10 max-w-2xl">
+            <p className="text-gray-400 text-lg leading-relaxed mb-8 max-w-2xl">
               Acesso a milhares de peças automotivas com especificações técnicas completas, referências OEM e aplicações por veículo.
             </p>
 
@@ -79,7 +79,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             </div>
 
             {/* Quick stats */}
-            <div className="flex flex-wrap gap-6 mt-12">
+            <div className="flex flex-wrap gap-8 mt-10">
               {[
                 { label: 'Marcas cadastradas', value: brands.length.toString().padStart(2, '0') },
                 { label: 'Categorias', value: categories.length.toString().padStart(2, '0') },
@@ -96,20 +96,20 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Categories strip */}
-      <section className="bg-gray-900 border-y border-gray-800 py-8">
+      <section className="bg-gray-900 border-y border-gray-800 py-6">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-5">
             <h2 className="text-gray-300 text-sm font-semibold tracking-widest uppercase">Categorias</h2>
             <div className="flex-1 h-px bg-gray-800" />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
             {categories.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => onNavigate('catalog', { categoryId: cat.id })}
-                className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-gray-800/50 border border-gray-700 hover:border-amber-500/40 hover:bg-amber-500/5 transition-all duration-200"
+                className="group flex flex-col items-center gap-1.5 p-3 rounded-xl bg-gray-800/50 border border-gray-700 hover:border-amber-500/40 hover:bg-amber-500/5 transition-all duration-200"
               >
-                <span className="text-2xl">{categoryIcons[cat.name] || '🔧'}</span>
+                <span className="text-xl">{categoryIcons[cat.name] || '🔧'}</span>
                 <span className="text-xs font-medium text-gray-400 group-hover:text-amber-400 transition-colors text-center">
                   {cat.name}
                 </span>
@@ -120,9 +120,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-gray-950">
+      <section className="py-16 bg-gray-950">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {[
               {
                 icon: Database,
@@ -157,12 +157,12 @@ export default function HomePage({ onNavigate }: HomePageProps) {
             ].map(feature => (
               <div
                 key={feature.title}
-                className="p-6 bg-gray-900 border border-gray-800 rounded-xl hover:border-gray-700 transition-colors"
+                className="p-5 bg-gray-900 border border-gray-800 rounded-xl hover:border-gray-700 transition-colors"
               >
-                <div className="w-10 h-10 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-center mb-4">
-                  <feature.icon className="w-5 h-5 text-amber-500" />
+                <div className="w-9 h-9 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-center mb-3">
+                  <feature.icon className="w-4 h-4 text-amber-500" />
                 </div>
-                <h3 className="text-white font-semibold mb-2">{feature.title}</h3>
+                <h3 className="text-white font-semibold mb-1.5">{feature.title}</h3>
                 <p className="text-gray-500 text-sm leading-relaxed">{feature.desc}</p>
               </div>
             ))}
@@ -171,9 +171,9 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Featured Products */}
-      <section className="py-20 bg-gray-900">
+      <section className="py-16 bg-gray-900">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-10">
+          <div className="flex items-center justify-between mb-8">
             <div>
               <p className="text-amber-500 text-xs font-semibold tracking-widest uppercase mb-1">Destaque</p>
               <h2 className="text-white text-2xl font-bold">Peças em Evidência</h2>
@@ -189,7 +189,7 @@ export default function HomePage({ onNavigate }: HomePageProps) {
           {featuredLoading ? (
             <div className="py-20"><LoadingSpinner label="Carregando peças..." /></div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
               {featuredProducts.map(product => (
                 <ProductCard
                   key={product.id}
@@ -203,18 +203,18 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Brands */}
-      <section className="py-16 bg-gray-950 border-t border-gray-800">
+      <section className="py-14 bg-gray-950 border-t border-gray-800">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-10">
+          <div className="text-center mb-8">
             <p className="text-amber-500 text-xs font-semibold tracking-widest uppercase mb-2">Fabricantes</p>
             <h2 className="text-white text-2xl font-bold">Marcas Premium no Catálogo</h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             {brands.map(brand => (
               <button
                 key={brand.id}
                 onClick={() => onNavigate('catalog', { brandId: brand.id })}
-                className="group p-4 bg-gray-900 border border-gray-800 rounded-xl hover:border-amber-500/40 hover:bg-amber-500/5 transition-all duration-200 flex flex-col items-center gap-2"
+                className="group p-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-amber-500/40 hover:bg-amber-500/5 transition-all duration-200 flex flex-col items-center gap-1.5"
               >
                 <div className="text-gray-400 group-hover:text-amber-400 font-bold text-sm transition-colors">
                   {brand.name}

@@ -1,6 +1,63 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { supabase } from './supabase';
 import type { Brand, Category, Product, ProductWithRelations } from './database.types';
+
+interface SearchSuggestion {
+  products: Product[];
+  skus: string[];
+  oems: string[];
+}
+
+export function useSearchSuggestions() {
+  const [suggestions, setSuggestions] = useState<SearchSuggestion>({ products: [], skus: [], oems: [] });
+  const [loading, setLoading] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const search = useCallback(async (query: string) => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+
+    timeoutRef.current = setTimeout(async () => {
+      setLoading(true);
+      const [prodRes, skuRes] = await Promise.all([
+        supabase
+          .from('products')
+          .select('id, name, sku, slug')
+          .or(`name.ilike.%${query}%,sku.ilike.%${query}%`)
+          .eq('active', true)
+          .limit(8),
+        supabase
+          .from('products')
+          .select('oem_codes')
+          .contains('oem_codes', [query])
+          .limit(10),
+      ]);
+
+      const products = prodRes.data ?? [];
+      const allOems = new Set<string>();
+      (skuRes.data ?? []).forEach((p: { oem_codes: string[] }) => {
+        p.oem_codes?.forEach(oem => {
+          if (oem.toLowerCase().includes(query.toLowerCase())) {
+            allOems.add(oem);
+          }
+        });
+      });
+
+      const matchingSkus = products
+        .filter(p => p.sku.toLowerCase().includes(query.toLowerCase()))
+        .map(p => p.sku)
+        .slice(0, 5);
+
+      setSuggestions({
+        products,
+        skus: matchingSkus,
+        oems: Array.from(allOems).slice(0, 5),
+      });
+      setLoading(false);
+    }, 200);
+  }, []);
+
+  return { suggestions, loading, search };
+}
 
 export interface ProductFilters {
   search?: string;

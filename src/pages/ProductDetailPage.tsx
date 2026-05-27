@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   ArrowLeft, Tag, Package, Weight, Ruler, Hash, Car, ChevronRight,
-  AlertCircle, CheckCircle, Copy, Check
+  AlertCircle, CheckCircle, Copy, Check, Share2, Printer, Star, StarOff
 } from 'lucide-react';
 import { useProduct } from '../lib/hooks';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
@@ -17,11 +17,23 @@ export default function ProductDetailPage({ slug, onNavigate }: ProductDetailPag
   const [activeImage, setActiveImage] = useState(0);
   const [copiedSku, setCopiedSku] = useState(false);
   const [activeTab, setActiveTab] = useState<'specs' | 'applications' | 'oem'>('specs');
+  const [copiedLink, setCopiedLink] = useState(false);
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
     setCopiedSku(true);
     setTimeout(() => setCopiedSku(false), 2000);
+  };
+
+  const shareProduct = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url);
+    setCopiedLink(true);
+    setTimeout(() => setCopiedLink(false), 2000);
+  };
+
+  const printProduct = () => {
+    window.print();
   };
 
   if (loading) {
@@ -160,6 +172,23 @@ export default function ProductDetailPage({ slug, onNavigate }: ProductDetailPag
               <p className="text-gray-400 leading-relaxed mb-6">{product.description}</p>
             )}
 
+            {/* Actions */}
+            <div className="flex items-center gap-2 mb-6">
+              <button
+                onClick={shareProduct}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-400 hover:text-white rounded-lg text-sm transition-colors"
+              >
+                {copiedLink ? <Check className="w-4 h-4 text-green-400" /> : <Share2 className="w-4 h-4" />}
+                {copiedLink ? 'Link copiado!' : 'Compartilhar'}
+              </button>
+              <button
+                onClick={printProduct}
+                className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-gray-400 hover:text-white rounded-lg text-sm transition-colors"
+              >
+                <Printer className="w-4 h-4" /> Imprimir
+              </button>
+            </div>
+
             {/* Price & Stock */}
             <div className="grid grid-cols-2 gap-4 mb-6">
               {product.price > 0 && (
@@ -201,9 +230,36 @@ export default function ProductDetailPage({ slug, onNavigate }: ProductDetailPag
                   </div>
                 </div>
               )}
+              {product.barcode && (
+                <div className="flex items-center gap-2 p-3 bg-gray-900 border border-gray-800 rounded-lg col-span-2">
+                  <Tag className="w-4 h-4 text-gray-500" />
+                  <div>
+                    <div className="text-gray-600 text-xs">Código de Barras</div>
+                    <div className="text-gray-300 text-sm font-mono">{product.barcode}</div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
+
+        {/* Related products section */}
+        {product.brands && (
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-white text-lg font-semibold">Produtos da mesma marca</h3>
+                <p className="text-gray-500 text-sm">Outras peças de {product.brands.name}</p>
+              </div>
+              <button
+                onClick={() => onNavigate('catalog', { brandId: product.brand_id ?? '' })}
+                className="flex items-center gap-2 text-sm text-gray-400 hover:text-amber-400 transition-colors"
+              >
+                Ver todos <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Tabs: Specs / Applications / OEM */}
         <div className="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">

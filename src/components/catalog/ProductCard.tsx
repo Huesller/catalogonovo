@@ -1,4 +1,4 @@
-import { Package, Tag, ChevronRight, Star } from 'lucide-react';
+import { Package, Tag, ChevronRight, Star, Hash } from 'lucide-react';
 import type { Product, Brand, Category } from '../../lib/database.types';
 
 interface ProductCardProps {
@@ -8,6 +8,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, onClick }: ProductCardProps) {
   const image = product.images?.[0];
+  const oemCount = product.oem_codes?.length ?? 0;
 
   return (
     <button
@@ -60,10 +61,18 @@ export default function ProductCard({ product, onClick }: ProductCardProps) {
           {product.name}
         </h3>
 
-        {/* SKU */}
-        <div className="flex items-center gap-1.5 mb-3">
-          <Tag className="w-3 h-3 text-gray-600" />
-          <span className="text-xs text-gray-500 font-mono">{product.sku}</span>
+        {/* SKU & OEM count */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-1.5">
+            <Tag className="w-3 h-3 text-gray-600" />
+            <span className="text-xs text-gray-500 font-mono">{product.sku}</span>
+          </div>
+          {oemCount > 0 && (
+            <div className="flex items-center gap-1 text-xs text-gray-600">
+              <Hash className="w-3 h-3" />
+              <span>{oemCount} OEM</span>
+            </div>
+          )}
         </div>
 
         {/* Footer */}
