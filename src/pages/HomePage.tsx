@@ -10,14 +10,9 @@ interface HomePageProps {
   onNavigate: (page: string, params?: Record<string, string>) => void;
 }
 
-const categoryIcons: Record<string, string> = {
-  Motor: '⚙️', Freios: '🔴', 'Suspensão': '↕️', Elétrica: '⚡',
-  'Ignição': '🔥', 'Transmissão': '⚙️', Filtros: '🔽', Arrefecimento: '🌡️',
-};
-
 export default function HomePage({ onNavigate }: HomePageProps) {
   const [searchQuery, setSearchQuery] = useState('');
-  const { products: featuredProducts, loading: featuredLoading } = useProducts({ featured: true, pageSize: 8 });
+  const { products: featuredProducts, loading: featuredLoading } = useProducts({ featured: true, pageSize: 6 });
   const { brands } = useBrands();
   const { categories } = useCategories();
 
@@ -30,64 +25,70 @@ export default function HomePage({ onNavigate }: HomePageProps) {
   return (
     <div>
       {/* Hero */}
-      <section className="relative min-h-[70vh] flex items-center overflow-hidden bg-gray-950">
-        {/* Background grid */}
-        <div
-          className="absolute inset-0 opacity-[0.03]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(251,191,36,1) 1px, transparent 1px), linear-gradient(90deg, rgba(251,191,36,1) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
-          }}
-        />
-        {/* Glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
+      <section className="relative min-h-[85vh] flex items-center overflow-hidden bg-base-0">
+        {/* Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 -left-1/4 w-[800px] h-[800px] rounded-full bg-gradient-radial from-accent/5 via-transparent to-transparent" />
+          <div className="absolute bottom-0 right-0 w-[600px] h-[600px] rounded-full bg-gradient-radial from-accent/3 via-transparent to-transparent" />
+          <div
+            className="absolute inset-0 opacity-[0.02]"
+            style={{
+              backgroundImage: `linear-gradient(rgba(var(--accent), 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent), 0.5) 1px, transparent 1px)`,
+              backgroundSize: '80px 80px',
+            }}
+          />
+        </div>
 
-        <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16 w-full">
-          <div className="max-w-3xl">
-            <div className="inline-flex items-center gap-2 border border-amber-500/30 bg-amber-500/10 rounded-full px-4 py-1.5 mb-6">
-              <div className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
-              <span className="text-amber-400 text-xs font-semibold tracking-widest uppercase">
+        <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28 w-full">
+          <div className="max-w-4xl mx-auto text-center">
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full border border-accent/20 bg-accent/5 mb-8 animate-fade-in">
+              <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+              <span className="text-accent text-xs font-semibold tracking-widest uppercase">
                 Plataforma B2B de Peças Automotivas
               </span>
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] tracking-tight mb-5">
+            {/* Headline */}
+            <h1 className="text-4xl sm:text-5xl lg:text-[3.5rem] font-bold text-base-900 leading-[1.1] tracking-tight mb-6 animate-slide-up">
               Catálogo Técnico
-              <span className="block text-amber-500">Premium</span>
+              <span className="block mt-2 text-gradient">Premium</span>
             </h1>
 
-            <p className="text-gray-400 text-lg leading-relaxed mb-8 max-w-2xl">
-              Acesso a milhares de peças automotivas com especificações técnicas completas, referências OEM e aplicações por veículo.
+            {/* Subheadline */}
+            <p className="text-base-600 text-lg sm:text-xl leading-relaxed mb-12 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '100ms' }}>
+              Acesso completo a milhares de peças automotivas com especificações técnicas, referências OEM e aplicações por veículo.
             </p>
 
-            {/* Search Hero */}
-            <div className="flex gap-3 max-w-xl">
+            {/* Search */}
+            <div className="flex flex-col sm:flex-row gap-3 max-w-xl mx-auto mb-16 animate-slide-up" style={{ animationDelay: '200ms' }}>
               <div className="flex-1">
                 <SearchBar
                   value={searchQuery}
                   onChange={setSearchQuery}
-                  placeholder="SKU, nome da peça ou código OEM..."
+                  placeholder="Buscar por SKU, nome ou código OEM..."
                   size="lg"
+                  onSelectSuggestion={(type, value) => onNavigate('catalog', { search: value })}
                 />
               </div>
-              <button
-                onClick={handleSearch}
-                className="px-6 bg-amber-500 hover:bg-amber-400 text-gray-950 font-bold rounded-xl transition-colors flex items-center gap-2 whitespace-nowrap"
-              >
-                <Search className="w-4 h-4" /> Buscar
+              <button onClick={handleSearch} className="btn-primary h-14 px-8 whitespace-nowrap">
+                <Search className="w-5 h-5" />
+                <span>Buscar</span>
               </button>
             </div>
 
-            {/* Quick stats */}
-            <div className="flex flex-wrap gap-8 mt-10">
+            {/* Stats */}
+            <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '300ms' }}>
               {[
-                { label: 'Marcas cadastradas', value: brands.length.toString().padStart(2, '0') },
-                { label: 'Categorias', value: categories.length.toString().padStart(2, '0') },
+                { label: 'Marcas', value: brands.length },
+                { label: 'Categorias', value: categories.length },
                 { label: 'Referências OEM', value: '1.200+' },
               ].map(stat => (
-                <div key={stat.label}>
-                  <div className="text-2xl font-bold text-white">{stat.value}</div>
-                  <div className="text-gray-500 text-sm">{stat.label}</div>
+                <div key={stat.label} className="text-center">
+                  <div className="text-3xl sm:text-4xl font-bold text-base-900 mb-1">
+                    {typeof stat.value === 'number' ? stat.value.toString().padStart(2, '0') : stat.value}
+                  </div>
+                  <div className="text-sm text-base-500">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -95,22 +96,24 @@ export default function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* Categories strip */}
-      <section className="bg-gray-900 border-y border-gray-800 py-6">
+      {/* Categories */}
+      <section className="bg-surface raised border-y border-base-200 py-10">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-3 mb-5">
-            <h2 className="text-gray-300 text-sm font-semibold tracking-widest uppercase">Categorias</h2>
-            <div className="flex-1 h-px bg-gray-800" />
+          <div className="flex items-center gap-4 mb-6">
+            <h2 className="text-sm font-semibold text-base-900 tracking-tight">Navegue por categoria</h2>
+            <div className="flex-1 h-px bg-base-300" />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             {categories.map(cat => (
               <button
                 key={cat.id}
                 onClick={() => onNavigate('catalog', { categoryId: cat.id })}
-                className="group flex flex-col items-center gap-1.5 p-3 rounded-xl bg-gray-800/50 border border-gray-700 hover:border-amber-500/40 hover:bg-amber-500/5 transition-all duration-200"
+                className="group flex flex-col items-center gap-2 p-4 rounded-xl bg-base-100 border border-base-200 hover:border-accent/30 hover:bg-accent/5 transition-all duration-200"
               >
-                <span className="text-xl">{categoryIcons[cat.name] || '🔧'}</span>
-                <span className="text-xs font-medium text-gray-400 group-hover:text-amber-400 transition-colors text-center">
+                <div className="w-10 h-10 rounded-lg bg-base-200 group-hover:bg-accent/10 flex items-center justify-center text-base-500 group-hover:text-accent transition-colors">
+                  <Layers className="w-5 h-5" />
+                </div>
+                <span className="text-xs font-medium text-base-600 group-hover:text-accent transition-colors text-center">
                   {cat.name}
                 </span>
               </button>
@@ -120,50 +123,59 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Features */}
-      <section className="py-16 bg-gray-950">
+      <section className="py-20 bg-base-0">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="text-center mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-base-900 mb-3">
+              Informação Técnica Completa
+            </h2>
+            <p className="text-base-500 max-w-xl mx-auto">
+              Tudo o que você precisa para encontrar a peça correta
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
                 icon: Database,
-                title: 'Dados Técnicos Completos',
-                desc: 'Especificações completas, pesos, dimensões e referências OEM de cada peça.',
+                title: 'Especificações Detalhadas',
+                desc: 'Dados técnicos completos: peso, dimensões, materiais e referências cruzadas.',
               },
               {
                 icon: Shield,
                 title: 'Aplicações por Veículo',
-                desc: 'Tabela de aplicações detalhada com marca, modelo, ano e motor para cada componente.',
+                desc: 'Tabela completa com marca, modelo, ano e motor para cada componente.',
               },
               {
                 icon: Zap,
-                title: 'Busca Ultra Rápida',
-                desc: 'Encontre peças por nome, SKU, código OEM ou referência cruzada em segundos.',
+                title: 'Busca Inteligente',
+                desc: 'Encontre rapidamente por nome, SKU, código OEM ou referência.',
               },
               {
                 icon: BarChart3,
                 title: 'Controle de Estoque',
-                desc: 'Visão em tempo real do estoque disponível e quantidade mínima de pedido.',
+                desc: 'Visão em tempo real da disponibilidade e quantidade mínima.',
               },
               {
                 icon: Layers,
-                title: 'Catálogo Hierárquico',
-                desc: 'Organização por categorias e subcategorias para navegação precisa.',
+                title: 'Organização Clara',
+                desc: 'Categorias e subcategorias para navegação precisa e organizada.',
               },
               {
                 icon: Search,
                 title: 'Filtros Avançados',
-                desc: 'Filtre por marca, categoria, aplicação e especificações técnicas.',
+                desc: 'Refine sua busca por marca, categoria, aplicação e mais.',
               },
             ].map(feature => (
               <div
                 key={feature.title}
-                className="p-5 bg-gray-900 border border-gray-800 rounded-xl hover:border-gray-700 transition-colors"
+                className="card-surface p-6 rounded-xl hover:border-base-300 transition-colors group"
               >
-                <div className="w-9 h-9 bg-amber-500/10 border border-amber-500/20 rounded-lg flex items-center justify-center mb-3">
-                  <feature.icon className="w-4 h-4 text-amber-500" />
+                <div className="w-12 h-12 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center mb-4 group-hover:bg-accent/15 transition-colors">
+                  <feature.icon className="w-6 h-6 text-accent" />
                 </div>
-                <h3 className="text-white font-semibold mb-1.5">{feature.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{feature.desc}</p>
+                <h3 className="text-base-900 font-semibold mb-2">{feature.title}</h3>
+                <p className="text-base-500 text-sm leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>
@@ -171,25 +183,28 @@ export default function HomePage({ onNavigate }: HomePageProps) {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-gray-900">
+      <section className="py-20 bg-surface raised">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-start justify-between mb-10">
             <div>
-              <p className="text-amber-500 text-xs font-semibold tracking-widest uppercase mb-1">Destaque</p>
-              <h2 className="text-white text-2xl font-bold">Peças em Evidência</h2>
+              <div className="text-label mb-2">Destaques</div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-base-900">
+                Peças em Evidência
+              </h2>
             </div>
             <button
               onClick={() => onNavigate('catalog')}
-              className="flex items-center gap-2 text-sm text-gray-400 hover:text-amber-400 transition-colors"
+              className="btn-secondary hidden sm:inline-flex"
             >
-              Ver catálogo completo <ArrowRight className="w-4 h-4" />
+              Ver catálogo completo
+              <ArrowRight className="w-4 h-4" />
             </button>
           </div>
 
           {featuredLoading ? (
-            <div className="py-20"><LoadingSpinner label="Carregando peças..." /></div>
+            <div className="py-20"><LoadingSpinner label="Carregando..." /></div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredProducts.map(product => (
                 <ProductCard
                   key={product.id}
@@ -199,28 +214,40 @@ export default function HomePage({ onNavigate }: HomePageProps) {
               ))}
             </div>
           )}
+
+          <button
+            onClick={() => onNavigate('catalog')}
+            className="btn-primary w-full mt-8 sm:hidden"
+          >
+            Ver catálogo completo
+            <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </section>
 
       {/* Brands */}
-      <section className="py-14 bg-gray-950 border-t border-gray-800">
+      <section className="py-16 bg-base-0 border-t border-base-200">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <p className="text-amber-500 text-xs font-semibold tracking-widest uppercase mb-2">Fabricantes</p>
-            <h2 className="text-white text-2xl font-bold">Marcas Premium no Catálogo</h2>
+          <div className="text-center mb-10">
+            <div className="text-label mb-2">Marcas</div>
+            <h2 className="text-2xl font-bold text-base-900">
+              Fabricantes Certificados
+            </h2>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
             {brands.map(brand => (
               <button
                 key={brand.id}
                 onClick={() => onNavigate('catalog', { brandId: brand.id })}
-                className="group p-3 bg-gray-900 border border-gray-800 rounded-xl hover:border-amber-500/40 hover:bg-amber-500/5 transition-all duration-200 flex flex-col items-center gap-1.5"
+                className="group card-surface p-5 rounded-xl hover:border-accent/30 hover:shadow-glow transition-all duration-200 flex flex-col items-center justify-center gap-2"
               >
-                <div className="text-gray-400 group-hover:text-amber-400 font-bold text-sm transition-colors">
+                <span className="text-base-700 group-hover:text-accent font-bold text-sm transition-colors">
                   {brand.name}
-                </div>
+                </span>
                 {brand.country && (
-                  <div className="text-gray-600 text-xs">{brand.country}</div>
+                  <span className="text-2xs text-base-500 group-hover:text-accent/70 transition-colors">
+                    {brand.country}
+                  </span>
                 )}
               </button>
             ))}

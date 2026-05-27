@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Search, Menu, X, ChevronDown, Settings, LogOut, User } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { Search, Menu, X, ChevronDown, Settings, LogOut, User, Layers } from 'lucide-react';
 import { useAuth } from '../../lib/auth';
 
 interface HeaderProps {
@@ -12,12 +12,30 @@ export default function Header({ currentPage, onNavigate, onSearch }: HeaderProp
   const { user, isAdmin, signOut } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchValue, setSearchValue] = useState('');
+  const [searchFocused, setSearchFocused] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handler = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handler, { passive: true });
+    return () => window.removeEventListener('scroll', handler);
+  }, []);
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (!(e.target as Element).closest('.user-menu')) setUserMenuOpen(false);
+    };
+    if (userMenuOpen) document.addEventListener('click', handler);
+    return () => document.removeEventListener('click', handler);
+  }, [userMenuOpen]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchValue.trim()) {
       onSearch(searchValue.trim());
+      setSearchValue('');
     }
   };
 
@@ -28,139 +46,209 @@ export default function Header({ currentPage, onNavigate, onSearch }: HeaderProp
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-gray-950/95 backdrop-blur-md border-b border-gray-800">
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <button
-            onClick={() => onNavigate('home')}
-            className="flex items-center gap-3 group"
-          >
-            <div className="w-8 h-8 bg-amber-500 rounded flex items-center justify-center flex-shrink-0 group-hover:bg-amber-400 transition-colors">
-              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-gray-950" stroke="currentColor" strokeWidth="2.5">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5" />
-                <path d="M2 12l10 5 10-5" />
-              </svg>
-            </div>
-            <div className="hidden sm:block">
-              <div className="text-white font-semibold text-sm leading-none tracking-wide">AUTOPARTS</div>
-              <div className="text-amber-500 text-xs leading-none tracking-widest font-medium mt-0.5">CATALOG PRO</div>
-            </div>
-          </button>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-1">
-            {navItems.map(item => (
-              <button
-                key={item.page}
-                onClick={() => onNavigate(item.page)}
-                className={`px-4 py-2 text-sm font-medium rounded transition-colors ${
-                  currentPage === item.page
-                    ? 'text-amber-400 bg-amber-500/10'
-                    : 'text-gray-400 hover:text-white hover:bg-gray-800'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-          </nav>
-
-          {/* Search */}
-          <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-1 max-w-sm mx-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
-              <input
-                type="text"
-                placeholder="Buscar peças, SKU, OEM..."
-                value={searchValue}
-                onChange={e => setSearchValue(e.target.value)}
-                className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-9 pr-4 py-2 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-colors"
-              />
-            </div>
-          </form>
-
-          {/* Right Actions */}
-          <div className="flex items-center gap-2">
-            {user ? (
-              <div className="relative">
-                <button
-                  onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-gray-800 transition-colors"
-                >
-                  <div className="w-6 h-6 bg-amber-500 rounded-full flex items-center justify-center">
-                    <User className="w-3.5 h-3.5 text-gray-950" />
-                  </div>
-                  <span className="hidden sm:block">{user.email?.split('@')[0]}</span>
-                  <ChevronDown className="w-3.5 h-3.5" />
-                </button>
-                {userMenuOpen && (
-                  <div className="absolute right-0 top-full mt-1 w-48 bg-gray-900 border border-gray-700 rounded-lg shadow-xl overflow-hidden">
-                    {isAdmin && (
-                      <button
-                        onClick={() => { onNavigate('admin'); setUserMenuOpen(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                      >
-                        <Settings className="w-4 h-4" /> Painel Admin
-                      </button>
-                    )}
-                    <button
-                      onClick={() => { signOut(); setUserMenuOpen(false); }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-sm text-gray-300 hover:bg-gray-800 hover:text-white transition-colors"
-                    >
-                      <LogOut className="w-4 h-4" /> Sair
-                    </button>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <button
-                onClick={() => onNavigate('login')}
-                className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
-              >
-                Entrar
-              </button>
-            )}
-
-            {/* Mobile menu */}
+    <>
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 ease-smooth ${
+          scrolled
+            ? 'bg-base-0/95 backdrop-blur-xl border-b border-base-200/80 shadow-subtle'
+            : 'bg-transparent border-b border-transparent'
+        }`}
+      >
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
+          <div className="flex items-center justify-between h-full">
+            {/* Logo */}
             <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 text-gray-400 hover:text-white rounded-lg hover:bg-gray-800 transition-colors"
+              onClick={() => onNavigate('home')}
+              className="group flex items-center gap-3.5 py-2"
             >
-              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              <div className="relative w-9 h-9 rounded-lg bg-gradient-to-br from-accent-light via-accent to-accent-dark p-[1px]">
+                <div className="absolute inset-0 rounded-lg bg-base-0" />
+                <div className="relative w-full h-full rounded-lg bg-gradient-to-br from-accent/20 to-transparent flex items-center justify-center">
+                  <Layers className="w-4 h-4 text-accent" strokeWidth={2.5} />
+                </div>
+              </div>
+              <div className="hidden sm:flex flex-col items-start">
+                <span className="text-base-900 text-sm font-semibold tracking-tight leading-none">
+                  AUTOPARTS
+                </span>
+                <span className="text-2xs font-medium tracking-[0.2em] text-accent leading-none mt-0.5">
+                  CATALOG PRO
+                </span>
+              </div>
             </button>
-          </div>
-        </div>
 
-        {/* Mobile Menu */}
-        {mobileOpen && (
-          <div className="md:hidden border-t border-gray-800 py-3 space-y-1">
-            <form onSubmit={handleSearch} className="px-1 pb-3">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            {/* Desktop Nav */}
+            <nav className="hidden md:flex items-center">
+              {navItems.map((item, i) => (
+                <button
+                  key={item.page}
+                  onClick={() => onNavigate(item.page)}
+                  className={`relative px-4 py-5 text-sm font-medium transition-colors ${
+                    currentPage === item.page
+                      ? 'text-base-900'
+                      : 'text-base-600 hover:text-base-800'
+                  }`}
+                >
+                  {item.label}
+                  {currentPage === item.page && (
+                    <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-accent rounded-t" />
+                  )}
+                </button>
+              ))}
+            </nav>
+
+            {/* Search */}
+            <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-sm mx-8">
+              <div className="relative w-full group">
+                <Search
+                  className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${
+                    searchFocused ? 'text-accent' : 'text-base-500'
+                  }`}
+                />
                 <input
+                  ref={searchRef}
                   type="text"
-                  placeholder="Buscar peças..."
+                  placeholder="Buscar por nome, SKU, OEM..."
                   value={searchValue}
                   onChange={e => setSearchValue(e.target.value)}
-                  className="w-full bg-gray-900 border border-gray-700 rounded-lg pl-9 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-amber-500"
+                  onFocus={() => setSearchFocused(true)}
+                  onBlur={() => setSearchFocused(false)}
+                  className="input-field pl-10 h-10 bg-base-50/80 border-base-200 text-sm"
+                />
+                <div
+                  className={`absolute inset-0 rounded-lg pointer-events-none transition-all duration-200 ${
+                    searchFocused
+                      ? 'ring-1 ring-accent/30 shadow-glow'
+                      : 'group-hover:border-base-300'
+                  }`}
                 />
               </div>
             </form>
-            {navItems.map(item => (
+
+            {/* Right Actions */}
+            <div className="flex items-center gap-1">
+              {user ? (
+                <div className="relative user-menu">
+                  <button
+                    onClick={() => setUserMenuOpen(!userMenuOpen)}
+                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-base-100 transition-colors group"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent/40 to-accent-dark/40 flex items-center justify-center ring-1 ring-accent/20">
+                      <User className="w-4 h-4 text-accent-light" />
+                    </div>
+                    <div className="hidden lg:flex flex-col items-start">
+                      <span className="text-sm text-base-800 font-medium leading-none">
+                        {user.email?.split('@')[0]}
+                      </span>
+                      <span className="text-2xs text-base-500 leading-none mt-0.5">
+                        {isAdmin ? 'Administrador' : 'Usuário'}
+                      </span>
+                    </div>
+                    <ChevronDown
+                      className={`w-4 h-4 text-base-500 transition-transform duration-200 ${
+                        userMenuOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+
+                  {userMenuOpen && (
+                    <div className="absolute right-0 top-full mt-2 w-56 card-surface shadow-elevated animate-scale-in origin-top-right">
+                      <div className="p-1.5">
+                        {isAdmin && (
+                          <button
+                            onClick={() => {
+                              onNavigate('admin');
+                              setUserMenuOpen(false);
+                            }}
+                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-base-700 hover:bg-base-100 hover:text-base-900 transition-colors"
+                          >
+                            <Settings className="w-4 h-4 text-base-500" />
+                            <span>Painel Administrativo</span>
+                          </button>
+                        )}
+                        <div className="my-1 h-px bg-base-200" />
+                        <button
+                          onClick={() => {
+                            signOut();
+                            setUserMenuOpen(false);
+                          }}
+                          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-base-700 hover:bg-base-100 hover:text-red-400 transition-colors"
+                        >
+                          <LogOut className="w-4 h-4 text-base-500" />
+                          <span>Sair</span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <button
+                  onClick={() => onNavigate('login')}
+                  className="btn-secondary"
+                >
+                  Entrar
+                </button>
+              )}
+
+              {/* Mobile menu toggle */}
               <button
-                key={item.page}
-                onClick={() => { onNavigate(item.page); setMobileOpen(false); }}
-                className={`w-full text-left px-4 py-2.5 text-sm font-medium rounded transition-colors ${
-                  currentPage === item.page ? 'text-amber-400 bg-amber-500/10' : 'text-gray-400 hover:text-white hover:bg-gray-800'
-                }`}
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="md:hidden p-2 rounded-lg hover:bg-base-100 text-base-600 hover:text-base-900 transition-colors"
               >
-                {item.label}
+                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
-            ))}
+            </div>
           </div>
-        )}
+        </div>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        className={`fixed inset-0 z-40 bg-base-0/90 backdrop-blur-sm md:hidden transition-opacity duration-300 ${
+          mobileOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+        onClick={() => setMobileOpen(false)}
+      />
+
+      {/* Mobile Menu Panel */}
+      <div
+        className={`fixed top-16 left-0 right-0 z-40 md:hidden transition-all duration-300 ease-smooth ${
+          mobileOpen ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0 pointer-events-none'
+        }`}
+      >
+        <div className="bg-surface border-b border-base-200">
+          <div className="max-w-screen-2xl mx-auto px-4 py-4 space-y-4">
+            <form onSubmit={handleSearch} className="relative">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-base-500" />
+              <input
+                type="text"
+                placeholder="Buscar por nome, SKU, OEM..."
+                value={searchValue}
+                onChange={e => setSearchValue(e.target.value)}
+                className="input-field pl-10 w-full"
+              />
+            </form>
+            <nav className="flex flex-col gap-1">
+              {navItems.map(item => (
+                <button
+                  key={item.page}
+                  onClick={() => {
+                    onNavigate(item.page);
+                    setMobileOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
+                    currentPage === item.page
+                      ? 'bg-accent/10 text-accent border-l-2 border-accent'
+                      : 'text-base-600 hover:bg-base-100 hover:text-base-900'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              ))}
+            </nav>
+          </div>
+        </div>
       </div>
-    </header>
+    </>
   );
 }

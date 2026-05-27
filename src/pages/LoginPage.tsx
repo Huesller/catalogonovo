@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LogIn, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { LogIn, Eye, EyeOff, AlertCircle, Layers } from 'lucide-react';
 import { useAuth } from '../lib/auth';
 
 interface LoginPageProps {
@@ -28,24 +28,26 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950 flex items-center justify-center px-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen bg-base-0 flex items-center justify-center px-4">
+      {/* Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-1/4 -left-1/4 w-[600px] h-[600px] rounded-full bg-gradient-radial from-accent/5 via-transparent to-transparent" />
+        <div className="absolute bottom-1/4 -right-1/4 w-[500px] h-[500px] rounded-full bg-gradient-radial from-accent/3 via-transparent to-transparent" />
+      </div>
+
+      <div className="relative w-full max-w-md">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="w-12 h-12 bg-amber-500 rounded-xl flex items-center justify-center mx-auto mb-4">
-            <svg viewBox="0 0 24 24" fill="none" className="w-7 h-7 text-gray-950" stroke="currentColor" strokeWidth="2.5">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
+        <div className="text-center mb-10">
+          <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-accent via-accent-dark to-accent-muted flex items-center justify-center mx-auto mb-5 shadow-glow">
+            <Layers className="w-7 h-7 text-base-0" strokeWidth={2.5} />
           </div>
-          <h1 className="text-white text-2xl font-bold">Área Restrita</h1>
-          <p className="text-gray-500 text-sm mt-1">Acesse o painel administrativo</p>
+          <h1 className="text-2xl font-bold text-base-900 mb-1">Área Restrita</h1>
+          <p className="text-base-500 text-sm">Acesse o painel administrativo</p>
         </div>
 
-        <div className="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+        <div className="card-surface rounded-2xl p-8">
           {error && (
-            <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/30 rounded-xl mb-6">
+            <div className="flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl mb-6 animate-scale-in">
               <AlertCircle className="w-4 h-4 text-red-400 flex-shrink-0" />
               <p className="text-red-400 text-sm">{error}</p>
             </div>
@@ -53,32 +55,32 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="text-gray-400 text-sm font-medium mb-2 block">E-mail</label>
+              <label className="text-base-700 text-sm font-medium mb-2 block">E-mail</label>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 required
-                className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-colors"
+                className="input-field"
                 placeholder="admin@empresa.com"
               />
             </div>
 
             <div>
-              <label className="text-gray-400 text-sm font-medium mb-2 block">Senha</label>
+              <label className="text-base-700 text-sm font-medium mb-2 block">Senha</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
-                  className="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 pr-12 text-white placeholder-gray-600 text-sm focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500/30 transition-colors"
+                  className="input-field pr-12"
                   placeholder="••••••••"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-base-500 hover:text-base-700 transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -88,22 +90,22 @@ export default function LoginPage({ onNavigate }: LoginPageProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex items-center justify-center gap-2 py-3 bg-amber-500 hover:bg-amber-400 disabled:opacity-60 disabled:cursor-not-allowed text-gray-950 font-bold rounded-xl transition-colors"
+              className="btn-primary w-full h-11 mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? (
-                <div className="w-4 h-4 border-2 border-gray-700 border-t-gray-950 rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-base-0 border-t-transparent rounded-full animate-spin" />
               ) : (
                 <LogIn className="w-4 h-4" />
               )}
-              {loading ? 'Entrando...' : 'Entrar'}
+              <span>{loading ? 'Entrando...' : 'Entrar'}</span>
             </button>
           </form>
         </div>
 
-        <div className="text-center mt-6">
+        <div className="text-center mt-8">
           <button
             onClick={() => onNavigate('home')}
-            className="text-gray-600 text-sm hover:text-gray-400 transition-colors"
+            className="text-base-500 text-sm hover:text-base-700 transition-colors"
           >
             Voltar ao catálogo
           </button>

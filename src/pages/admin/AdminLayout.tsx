@@ -1,6 +1,6 @@
 import { type ReactNode } from 'react';
 import {
-  LayoutDashboard, Package, Tag, Layers, LogOut, ChevronRight, X, Menu
+  LayoutDashboard, Package, Tag, Layers, LogOut, X, Menu, Layers as LogoIcon
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../lib/auth';
@@ -24,74 +24,77 @@ export default function AdminLayout({ activeSection, onSection, onNavigate, chil
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="min-h-screen bg-base-0 flex">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
+          className="fixed inset-0 z-40 bg-base-0/80 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <aside className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-60 bg-gray-900 border-r border-gray-800 flex flex-col transition-transform duration-200 ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-      }`}>
+      <aside
+        className={`fixed lg:sticky top-0 left-0 z-50 h-screen w-64 bg-surface border-r border-base-200 flex flex-col transition-transform duration-300 ease-smooth ${
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        }`}
+      >
         {/* Logo */}
-        <div className="p-5 border-b border-gray-800">
+        <div className="p-5 border-b border-base-200">
           <button
             onClick={() => onNavigate('home')}
             className="flex items-center gap-3 group"
           >
-            <div className="w-8 h-8 bg-amber-500 rounded flex items-center justify-center flex-shrink-0">
-              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-gray-950" stroke="currentColor" strokeWidth="2.5">
-                <path d="M12 2L2 7l10 5 10-5-10-5z" />
-                <path d="M2 17l10 5 10-5" />
-                <path d="M2 12l10 5 10-5" />
-              </svg>
+            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-accent via-accent-dark to-accent-muted flex items-center justify-center">
+              <LogoIcon className="w-4 h-4 text-base-0" strokeWidth={2.5} />
             </div>
             <div>
-              <div className="text-white font-semibold text-xs leading-none">AUTOPARTS</div>
-              <div className="text-amber-500 text-xs leading-none mt-0.5 font-medium">ADMIN</div>
+              <span className="text-base-900 font-semibold text-sm tracking-tight">AUTOPARTS</span>
+              <span className="block text-accent text-2xs tracking-widest font-medium mt-0.5">ADMIN</span>
             </div>
           </button>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-          {navItems.map(item => (
-            <button
-              key={item.key}
-              onClick={() => { onSection(item.key); setSidebarOpen(false); }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                activeSection === item.key
-                  ? 'bg-amber-500/15 text-amber-400 font-medium'
-                  : 'text-gray-400 hover:bg-gray-800 hover:text-white'
-              }`}
-            >
-              <item.icon className="w-4 h-4 flex-shrink-0" />
-              {item.label}
-              {activeSection === item.key && <ChevronRight className="w-3.5 h-3.5 ml-auto" />}
-            </button>
-          ))}
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {navItems.map(item => {
+            const isActive = activeSection === item.key;
+            return (
+              <button
+                key={item.key}
+                onClick={() => {
+                  onSection(item.key);
+                  setSidebarOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-all duration-150 ${
+                  isActive
+                    ? 'bg-accent/10 text-accent font-medium'
+                    : 'text-base-600 hover:bg-base-100 hover:text-base-900'
+                }`}
+              >
+                <item.icon className="w-4 h-4 flex-shrink-0" />
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
         </nav>
 
         {/* User */}
-        <div className="p-3 border-t border-gray-800 space-y-0.5">
+        <div className="p-4 border-t border-base-200 space-y-1">
           <button
             onClick={() => onNavigate('catalog')}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-gray-800 hover:text-white transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-base-600 hover:bg-base-100 hover:text-base-900 transition-colors"
           >
             <Package className="w-4 h-4" /> Ver Catálogo
           </button>
           <button
             onClick={signOut}
-            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-red-500/10 hover:text-red-400 transition-colors"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-base-600 hover:bg-red-500/10 hover:text-red-400 transition-colors"
           >
             <LogOut className="w-4 h-4" /> Sair
           </button>
-          <div className="px-3 pt-2">
-            <div className="text-gray-600 text-xs truncate">{user?.email}</div>
+          <div className="px-3 pt-3">
+            <span className="text-base-500 text-xs">{user?.email}</span>
           </div>
         </div>
       </aside>
@@ -99,16 +102,17 @@ export default function AdminLayout({ activeSection, onSection, onNavigate, chil
       {/* Main content */}
       <div className="flex-1 min-w-0 flex flex-col">
         {/* Mobile topbar */}
-        <div className="lg:hidden flex items-center gap-3 px-4 py-3 bg-gray-900 border-b border-gray-800 sticky top-0 z-30">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 text-gray-400 hover:text-white">
+        <div className="lg:hidden flex items-center gap-3 px-4 py-3 bg-surface border-b border-base-200 sticky top-0 z-30">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            className="p-2 rounded-lg text-base-600 hover:text-base-900 hover:bg-base-100 transition-colors"
+          >
             <Menu className="w-5 h-5" />
           </button>
-          <span className="text-white font-semibold text-sm capitalize">{activeSection}</span>
+          <span className="text-base-900 font-semibold capitalize">{activeSection}</span>
         </div>
 
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto">
-          {children}
-        </main>
+        <main className="flex-1 p-6 lg:p-10 overflow-y-auto">{children}</main>
       </div>
     </div>
   );

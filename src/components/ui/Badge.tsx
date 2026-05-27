@@ -1,11 +1,11 @@
-type Variant = 'default' | 'amber' | 'green' | 'red' | 'blue';
+type Variant = 'default' | 'accent' | 'success' | 'warning' | 'error';
 
 const styles: Record<Variant, string> = {
-  default: 'bg-gray-800 text-gray-400',
-  amber: 'bg-amber-500/15 text-amber-400',
-  green: 'bg-green-500/15 text-green-400',
-  red: 'bg-red-500/15 text-red-400',
-  blue: 'bg-blue-500/15 text-blue-400',
+  default: 'bg-base-100 text-base-600 border-base-200',
+  accent: 'bg-accent/10 text-accent border-accent/20',
+  success: 'bg-green-500/10 text-green-400 border-green-500/20',
+  warning: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  error: 'bg-red-500/10 text-red-400 border-red-500/20',
 };
 
 export default function Badge({
@@ -19,8 +19,8 @@ export default function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded font-medium ${
-        size === 'xs' ? 'text-xs px-1.5 py-0.5' : 'text-xs px-2.5 py-1'
+      className={`inline-flex items-center rounded-md font-medium border ${
+        size === 'xs' ? 'text-2xs px-1.5 py-0.5' : 'text-xs px-2.5 py-1'
       } ${styles[variant]}`}
     >
       {children}
