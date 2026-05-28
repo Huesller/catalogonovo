@@ -48,134 +48,102 @@ export default function Header({ currentPage, onNavigate, onSearch }: HeaderProp
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-500 ease-smooth ${
+        className={`fixed top-0 left-0 right-0 z-50 h-16 transition-all duration-300 ${
           scrolled
-            ? 'bg-base-0/80 backdrop-blur-2xl border-b border-base-200/50 shadow-elevated'
-            : 'bg-transparent border-b border-transparent'
+            ? 'bg-base-0/95 border-b border-accent/18'
+            : 'bg-base-0/95 border-b border-accent/18'
         }`}
       >
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
-          <div className="flex items-center justify-between h-full">
+        <div className="max-w-screen-2xl mx-auto px-7 h-full">
+          <div className="flex items-center justify-between h-full gap-8">
             {/* Logo */}
             <button
               onClick={() => onNavigate('home')}
-              className="group flex items-center gap-3.5 py-2"
+              className="flex items-center gap-2.5 flex-shrink-0"
             >
-              <div className="relative w-9 h-9 rounded-lg bg-gradient-to-br from-accent-light via-accent to-accent-dark p-[1px]">
-                <div className="absolute inset-0 rounded-lg bg-base-0" />
-                <div className="relative w-full h-full rounded-lg bg-gradient-to-br from-accent/20 to-transparent flex items-center justify-center">
-                  <Layers className="w-4 h-4 text-accent" strokeWidth={2.5} />
-                </div>
+              <div className="w-8 h-8 bg-gradient-to-br from-accent to-accent-light rounded-md flex items-center justify-center font-display font-extrabold text-white text-sm">
+                A
               </div>
-              <div className="hidden sm:flex flex-col items-start">
-                <span className="text-base-900 text-sm font-semibold tracking-tight leading-none">
-                  AUTOPARTS
-                </span>
-                <span className="text-2xs font-medium tracking-[0.2em] text-accent leading-none mt-0.5">
-                  CATALOG PRO
-                </span>
+              <div className="hidden sm:block">
+                <div className="font-display font-bold text-xs text-base-900 leading-none">Empresa</div>
+                <div className="font-display font-bold text-[0.625rem] tracking-widest text-accent leading-none mt-0.5">CATÁLOGO</div>
               </div>
             </button>
 
             {/* Desktop Nav */}
-            <nav className="hidden md:flex items-center">
-              {navItems.map((item, i) => (
+            <nav className="hidden md:flex items-center gap-7">
+              {navItems.map((item) => (
                 <button
                   key={item.page}
                   onClick={() => onNavigate(item.page)}
-                  className={`relative px-4 py-5 text-sm font-medium transition-colors ${
+                  className={`text-xs font-medium tracking-wider uppercase transition-colors ${
                     currentPage === item.page
-                      ? 'text-base-900'
-                      : 'text-base-600 hover:text-base-800'
+                      ? 'text-accent'
+                      : 'text-base-500 hover:text-base-900'
                   }`}
                 >
                   {item.label}
-                  {currentPage === item.page && (
-                    <span className="absolute bottom-0 left-4 right-4 h-[2px] bg-accent rounded-t" />
-                  )}
                 </button>
               ))}
             </nav>
 
             {/* Search */}
-            <form onSubmit={handleSearch} className="hidden md:flex items-center flex-1 max-w-sm mx-8">
-              <div className="relative w-full group">
-                <Search
-                  className={`absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 transition-colors ${
-                    searchFocused ? 'text-accent' : 'text-base-500'
-                  }`}
-                />
+            <form onSubmit={handleSearch} className="hidden lg:flex items-center flex-1 max-w-xs">
+              <div className="relative w-full flex items-center h-8 bg-base-100/40 border border-accent/25 rounded-md overflow-hidden">
+                <Search className="w-3.5 h-3.5 text-accent/50 mx-3 flex-shrink-0" />
                 <input
                   ref={searchRef}
                   type="text"
-                  placeholder="Buscar por nome, SKU, OEM..."
+                  placeholder="SKU, nome ou código OEM..."
                   value={searchValue}
                   onChange={e => setSearchValue(e.target.value)}
                   onFocus={() => setSearchFocused(true)}
                   onBlur={() => setSearchFocused(false)}
-                  className="input-field pl-10 h-10 bg-base-50/80 border-base-200 text-sm"
+                  className="flex-1 bg-transparent border-none outline-none text-xs text-base-900 placeholder-base-500"
                 />
-                <div
-                  className={`absolute inset-0 rounded-lg pointer-events-none transition-all duration-200 ${
-                    searchFocused
-                      ? 'ring-1 ring-accent/30 shadow-glow'
-                      : 'group-hover:border-base-300'
-                  }`}
-                />
+                <button
+                  type="submit"
+                  className="px-3.5 py-1.5 bg-accent text-white text-xs font-medium uppercase tracking-widest hover:bg-accent-light transition-colors"
+                >
+                  Buscar
+                </button>
               </div>
             </form>
 
             {/* Right Actions */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-3">
               {user ? (
-                <div className="relative user-menu">
+                <div className="relative user-menu hidden md:block">
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                    className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-base-100 transition-colors group"
+                    className="flex items-center gap-1.5 px-2 py-1.5"
                   >
-                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-accent/40 to-accent-dark/40 flex items-center justify-center ring-1 ring-accent/20">
-                      <User className="w-4 h-4 text-accent-light" />
-                    </div>
-                    <div className="hidden lg:flex flex-col items-start">
-                      <span className="text-sm text-base-800 font-medium leading-none">
-                        {user.email?.split('@')[0]}
-                      </span>
-                      <span className="text-2xs text-base-500 leading-none mt-0.5">
-                        {isAdmin ? 'Administrador' : 'Usuário'}
-                      </span>
-                    </div>
-                    <ChevronDown
-                      className={`w-4 h-4 text-base-500 transition-transform duration-200 ${
-                        userMenuOpen ? 'rotate-180' : ''
-                      }`}
-                    />
+                    <User className="w-3.5 h-3.5 text-accent" />
+                    <ChevronDown className={`w-3.5 h-3.5 text-base-500 transition-transform duration-200 ${userMenuOpen ? 'rotate-180' : ''}`} />
                   </button>
 
                   {userMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-56 card-surface shadow-elevated animate-scale-in origin-top-right">
-                      <div className="p-1.5">
+                    <div className="absolute right-0 top-full mt-2 w-48 bg-base-0 border border-accent/18 rounded-md shadow-lg z-50">
+                      <div className="py-1">
                         {isAdmin && (
                           <button
                             onClick={() => {
                               onNavigate('admin');
                               setUserMenuOpen(false);
                             }}
-                            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-base-700 hover:bg-base-100 hover:text-base-900 transition-colors"
+                            className="w-full text-left px-4 py-2 text-xs text-base-600 hover:text-accent transition-colors"
                           >
-                            <Settings className="w-4 h-4 text-base-500" />
-                            <span>Painel Administrativo</span>
+                            Painel Administrativo
                           </button>
                         )}
-                        <div className="my-1 h-px bg-base-200" />
                         <button
                           onClick={() => {
                             signOut();
                             setUserMenuOpen(false);
                           }}
-                          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-base-700 hover:bg-base-100 hover:text-red-400 transition-colors"
+                          className="w-full text-left px-4 py-2 text-xs text-base-600 hover:text-accent transition-colors"
                         >
-                          <LogOut className="w-4 h-4 text-base-500" />
-                          <span>Sair</span>
+                          Sair
                         </button>
                       </div>
                     </div>
@@ -184,7 +152,7 @@ export default function Header({ currentPage, onNavigate, onSearch }: HeaderProp
               ) : (
                 <button
                   onClick={() => onNavigate('login')}
-                  className="btn-secondary"
+                  className="hidden md:block text-xs font-medium text-base-500 hover:text-accent transition-colors"
                 >
                   Entrar
                 </button>
@@ -193,7 +161,7 @@ export default function Header({ currentPage, onNavigate, onSearch }: HeaderProp
               {/* Mobile menu toggle */}
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="md:hidden p-2 rounded-lg hover:bg-base-100 text-base-600 hover:text-base-900 transition-colors"
+                className="md:hidden p-2"
               >
                 {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </button>
